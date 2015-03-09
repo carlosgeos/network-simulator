@@ -1,0 +1,42 @@
+! The following options change the default behaviour of clients using
+! the X libraries. Same structure as a .Xdefaults/.Xresources file.
+
+! Stock tk widgets use this configuration, ttk theme widgets don't.
+
+! --- ### --- !
+
+! Global config, less priority
+
+*background:	   		#DFEDF0
+*foreground:			black
+*font:				cantarell 12
+*highlightBackground:		#DEEAF4
+! *highlightColor:		blue
+*highlightThickness:		5
+
+
+! Widget dependent config, more priority
+
+*Button.background:		#CAE5FF
+*Button.activeBackground:       #3284FC
+*Button.activeForeground:	#FAFAFA
+*Button.width:	   		20
+*Button.cursor:			hand2
+*Canvas.width:			350
+*Canvas.height:			350
+*Canvas.borderWidth:		3
+*Canvas.background:		#AAAAAA
+*Canvas.cursor:			hand1
+*Canvas.relief:			ridge
+*Menubutton.activeBackground:	#3284FC
+*Menubutton.cursor:		hand2
+*Menubutton.padX:		15
+*Scale.activeBackground:	#3284FC
+*Scale.cursor:			hand2
+*Scale.width:			20
+*Labelframe.relief:		ridge
+*Labelframe.padY:		15
+*Labelframe.padX:		15
+*Labelframe.borderWidth:	3
+*Labelframe.labelAnchor:	n
+*Labelframe.foreground:		#666666

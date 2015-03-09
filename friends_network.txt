@@ -1,0 +1,7 @@
+Alice : Bob, Eva
+Bob : Alice, Chuck Norris, David
+Chuck Norris : Bob, Freddy
+David : Freddy, Bob
+Eva : Freddy, Alice, Georges
+Freddy : Chuck Norris, David, Eva, Georges
+Georges : Freddy, Eva
