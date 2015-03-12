@@ -4,7 +4,7 @@
 # Carlos Requena López
 
 """Module implementing the graphical user interface of the network
-simulator
+simulator.
 
 """
 # --- TkInter libraries --- #
@@ -12,7 +12,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import simpledialog
 from tkinter import messagebox
-import random
+#import random
 # --- GUI main widgets --- #
 from NetworkFrame import NetworkFrame
 from NetworkInfo import NetworkInfo
@@ -24,12 +24,16 @@ from SimuOptions import SimuOptions
 # --- Abstract Classes --- #
 from Common import Common       # common widget methods and attributes
 from Person import Person
-from Link import Link
+#from Link import Link
 # --- Simulator functions --- #
 import rumorFunctions as rF
 
 
 class GUI(Tk, Common):
+    """Instance class defining the Graphical User Interface, more
+    specifically, the top level window and root Tk
+
+    """
 
     modif_funcs = {"none": rF.none,
                    "incremental": rF.incremental,
@@ -40,23 +44,18 @@ class GUI(Tk, Common):
                     "mixture": rF.mixture}
 
 
-    """Instance class defining the Graphical User Interface, more
-    specifically, the top level window and root Tk
-
-    """
-
     def __init__(self):
         super().__init__()      # takes Tk constructor
 
         self.option_readfile("optionsDB") # .Xresources file
         self.title("Network simulator")
-        
+
         # Root binds / shortcuts
         self.bind("<Control-w>", lambda event: self.destroy())
         self.bind("<Control-q>", lambda event: self.destroy())
         self.bind("<Control-o>", lambda event: self.load_file())
 
-        # Data center
+        # Data to manipulate
         self.simu_data = {
             "network_file": None,
             "network": [],
@@ -107,7 +106,6 @@ class GUI(Tk, Common):
 
 
     # --- Files and errors --- #
-
     def network_check(self):
         """Method checking if names is empty or not"""
         try:
@@ -115,7 +113,7 @@ class GUI(Tk, Common):
                 raise TclError
         except TclError:
             messagebox.showwarning("No network", "The network is empty!")
-            return False 
+            return False
         else:
             return True
 
@@ -129,37 +127,43 @@ class GUI(Tk, Common):
                   ("All files", ".*")]
         self.simu_data["network_file"] = filedialog.askopenfilename(title="Select a network file",
                                                                     filetypes=ftypes)
-        
 
-        #try: pensar en hacer exception handling!
+
         self.simu_data["people"] = rF.load_people(self.simu_data["network_file"])
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
         self.update_app()
 
 
+    def save_file(self):
+        """Takes a snapshot of the current state of the network and saves it
+        to a file. The file format is readable by this program using
+        the load_file method.
+
+        """
+        pass
+
+
     def reset_all(self):
+        """Resets the network to the initial state
+        """
         self.simu_data["people"] = []
         self.simu_data["network"] = []
         self.simu_info.stage_number.set(0)
         self.simu_info.still_fool.set(0)
         self.update_app()
-        
-    def save_file(self):
-        """Partie 4
-        """
-        pass
+
 
     # --- calls to rumorFunctions and simulator related methods --- #
-
     def add_friend(self):
         """adds a person to the network"""
         name = simpledialog.askstring("Add a new person",
                                       "Name of person:")
-        # TODO: if name.isdigit() --> conflict with canvas object ID's
+        # TODO: if name.isdigit() --> conflict with canvas object ID's, añadir eso 
         index = len(self.simu_data["people"])
         self.simu_data["people"].append(Person(name, index))
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
         self.update_app()
+
 
     def run(self):
         """call propagate for a finite number of times"""
@@ -171,7 +175,8 @@ class GUI(Tk, Common):
                 self.propagate()
                 self.after(delay)
                 self.update()
-            
+
+
     def calc_still_fools(self):
         """Calculates the number of people that still do not know any rumor"""
         counter = 0

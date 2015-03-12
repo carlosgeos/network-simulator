@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-"""some doc
-"""
-
-from tkinter import *
+from tkinter import LabelFrame
+from tkinter import Scale, Label, OptionMenu
+from tkinter import StringVar, IntVar, DoubleVar
 from Common import Common
 
 
@@ -17,13 +16,13 @@ class DispOptions(LabelFrame, Common):
 
         self.layout = StringVar()
         self.layout.set(self.LAYOUT[0])
-        
+
         self.node_size = IntVar()
         self.node_size.set(20)
-        
+
         self.link_thickness = IntVar()
         self.link_thickness.set(2)
-        
+
         self.delay = DoubleVar()
         self.delay.set(0.5)
 
