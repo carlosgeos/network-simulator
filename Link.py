@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""File containing the file class"""
-
-from tkinter import *
+from tkinter import ROUND
 
 class Link:
     """This class represents the link (friendship) between 2 people. It is
@@ -33,7 +31,7 @@ class Link:
         master.tag_bind(tag, "<Double-Button-1>", lambda event:\
                         self.delete_link(gui))
 
-        
+
         self.link_thickness = link_thickness
         self.points = (self.person1.node_geometry[0],
                        self.person1.node_geometry[1],

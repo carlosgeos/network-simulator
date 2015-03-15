@@ -37,7 +37,7 @@ def probability(str_value):
     """
     value = float(str_value)
     if not 0 <= value <= 1:
-        raise argparse.ArgumentTypeError
+        raise TypeError("Invalid probability value")
     return value
 
 def rumor_type(str_value):
@@ -53,7 +53,7 @@ def load_network(people):
     Links.
 
     """
-    
+
     network = [[False for person in people] for person in people]
     for i in range(len(people)):
         for friend in people[i].friends:
@@ -103,12 +103,12 @@ def are_friends(network, idx0, idx1):
     elif idx0 < idx1:
         res = network[idx1][idx0]
     return res
-    
+
 def set_as_friends(network, people, idx0, idx1):
     """This funciton sets persons with ids id0 and id1 as friends in the
     social network.  It is impossible to set a person as a friend with
     himself/herself.
-    
+
     """
     if idx0 > idx1:
         network[idx0][idx1] = Link(people[idx0], people[idx1], idx0, idx1)
@@ -134,7 +134,7 @@ def get_random_friend_id(index, network, people, dont_tell):
 
 def print_network(names, friends):
     """Prints the network as it was loaded from the file"""
-    
+
     print("\nNetwork loaded: ")
     for i in range(len(names)):
         print(names[i], ": ", end="")
