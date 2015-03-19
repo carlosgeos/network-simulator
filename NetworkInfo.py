@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
-"""some doc
-"""
-
-from tkinter import *
+from tkinter import LabelFrame, Label
+from tkinter import StringVar, IntVar
+from tkinter import NW, W, SW, E, NE, SE
 from Common import Common
 
 class NetworkInfo(LabelFrame, Common):
-    """label frame displaying basic information about the network loaded
-    or created, like the number of people, or the name of them.
+    """Label frame displaying basic information about the network loaded
+    or created, like the number of people or their name.
 
     """
     def __init__(self, master):
-        """constructor for the widget, six labels
-
-        """
         super().__init__(master, text="Network information")
 
-        # Attributes to use: (shared with NetworkFrame)
+        # Attributes to use (shared with NetworkFrame)
         self.node_name = StringVar()
         self.node_rumor = StringVar()
         self.network_size = IntVar()
@@ -34,5 +30,5 @@ class NetworkInfo(LabelFrame, Common):
               width=15).grid(row=1, column=1, sticky=E)
         Label(self, textvariable=self.node_rumor,
               anchor=E).grid(row=2, column=1, sticky=SE)
-        
+
         self.resizeable()

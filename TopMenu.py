@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-
-""" asdf """
-
 from tkinter import Menu
 from tkinter import messagebox
 
-
 class TopMenu(Menu):
-    """This method creates the Tk Window Menu, which can be seen at the
+    """This class contains the Tk Window Menu, which can be seen at the
     top bar of the window.
 
     """
@@ -32,4 +28,3 @@ def about_app():
     messagebox.showinfo("About", "{}\n{}\n{}".format("YAWN",
                                                      "Yet Another Network Simulator",
                                                      "Carlos Requena López - 2015"))
-

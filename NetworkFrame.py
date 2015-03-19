@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-"""module containing the NetworkFrame class"""
-
-from tkinter import *
-from math import cos
-from math import sin
-from math import pi
+from tkinter import Canvas
+from math import cos, sin, pi
+from tkinter import ROUND
 from random import randint
 from Person import Person
 from Link import Link
@@ -14,7 +11,7 @@ class NetworkFrame(Canvas):
     """Class inheriting from tkinter.Canvas. It contains the graphic
     representation of the network. Its children (tkinter) are the
     Person(s) and Links
-    
+
     """
 
     def __init__(self, master, network_info, disp_options):
@@ -31,7 +28,7 @@ class NetworkFrame(Canvas):
         # Canvas will update automatically if window resizes
         self.bind("<Configure>", lambda event: master.update_app())
 
-        # Access to simu_data attribute and some methods needed 
+        # Access to simu_data attribute and some methods needed
         self.master = master
 
     def update(self, network, people, *args):
@@ -40,7 +37,7 @@ class NetworkFrame(Canvas):
         node_size = self.display_friend.node_size.get()
         link_thickness = self.display_friend.link_thickness.get()
         border_adjust = node_size + 20
-        
+
         # Draw people
         for i in range(len(people)):
             node_geometry = self.layout_funcs[self.display_friend.layout.get()](i, border_adjust, people)
@@ -51,7 +48,7 @@ class NetworkFrame(Canvas):
             for j in range(len(network[i])):
                 if network[i][j]:
                     network[i][j].draw_link(self, self.master, link_thickness)
-        
+
 
     def circular(self, index, border_adjust, people):
         """Represents the network in an oval fashion"""
@@ -64,7 +61,7 @@ class NetworkFrame(Canvas):
                          major_radius * 2 + border_adjust, # x1
                          minor_radius * 2 + border_adjust, # y1
                          dash=(10,))
-        
+
 
         angles = 2*pi/len(people)
         angle = angles * (index + 1)
@@ -84,7 +81,7 @@ class NetworkFrame(Canvas):
 
         x_coord = randint(left, right)
         y_coord = randint(top, bottom)
-        
+
         return x_coord, y_coord
 
 
@@ -116,7 +113,7 @@ class NetworkFrame(Canvas):
                          tags="dndline")
 
         self.start_node = start_node
-        
+
 
     def dnd_end(self, event, tag):
         """drag and drop feature

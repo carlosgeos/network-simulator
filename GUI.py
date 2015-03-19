@@ -7,6 +7,7 @@
 simulator.
 
 """
+
 # --- TkInter libraries --- #
 from tkinter import *
 from tkinter import filedialog
@@ -158,7 +159,7 @@ class GUI(Tk, Common):
         """adds a person to the network"""
         name = simpledialog.askstring("Add a new person",
                                       "Name of person:")
-        # TODO: if name.isdigit() --> conflict with canvas object ID's, añadir eso 
+        # TODO: if name.isdigit() --> conflict with canvas object ID's, añadir eso
         index = len(self.simu_data["people"])
         self.simu_data["people"].append(Person(name, index))
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
@@ -196,7 +197,7 @@ class GUI(Tk, Common):
         self.calc_still_fools()
 
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
-        
+
         # Update canvas
         self.canvas.update(self.simu_data["network"],
                            self.simu_data["people"])
@@ -209,7 +210,7 @@ class GUI(Tk, Common):
             dont_tell = False
 
             flags = (dont_tell, modif_func, prob, update_func)
-        
+
             spread = rF.update(self.simu_data["network"], self.simu_data["people"], flags)
             self.simu_info.stage_number.set(self.simu_info.stage_number.get() + 1)
             self.update_app()
@@ -217,8 +218,8 @@ class GUI(Tk, Common):
 # --- Main --- #
 def main():
     """Main function. Creates an instance of class GUI, which is the
-    parent object (tkinter-speaking), and in turn inherits from the
-    root window Tk. This way the hierarchy keeps coherence.
+    tkinter parent object, and in turn inherits from the root window
+    Tk. This way the hierarchy keeps coherence.
 
     """
     my_gui = GUI()

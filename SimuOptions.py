@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-"""asdf"""
-
 from tkinter import *
 from Common import Common
 
@@ -13,6 +11,8 @@ class SimuOptions(LabelFrame, Common):
     UPDATE = ("stable", "rewrite", "mixture")
     SELECTION = "random"
     MODIFICATION = ("none", "incremental", "bitflip")
+
+    DEFAULT_PROBABILITY = 0.5
 
     def __init__(self, master):
         super().__init__(master, text="Simulator Options")
@@ -40,10 +40,10 @@ class SimuOptions(LabelFrame, Common):
                             variable=master.simu_data["probability"])
         error_scale.grid(row=2, column=0, columnspan=3)
 
-        # default values:
+        # default values
         master.simu_data["update_function"].set(self.UPDATE[0])
         master.simu_data["select_policy"].set(self.SELECTION)
         master.simu_data["modif_function"].set(self.MODIFICATION[0])
-        master.simu_data["probability"].set(0.5)
+        master.simu_data["probability"].set(self.DEFAULT_PROBABILITY)
 
         self.resizeable()

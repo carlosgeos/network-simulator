@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-"""# TOD
-"""
 
-from tkinter import *
+from tkinter import LabelFrame, Label
+from tkinter import IntVar, NW, NE, SW, SE, E
 from Common import Common
 
 class SimuInfo(LabelFrame, Common):

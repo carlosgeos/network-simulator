@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Class representing a person in the network"""
 
-from tkinter import *
 from tkinter import colorchooser
 from PlatformUtils import PlatformUtils
 
@@ -34,7 +32,7 @@ class Person:
                         master.dnd_start(self, event))
         master.tag_bind(tag, "<ButtonRelease-1>", lambda event:\
                         master.dnd_end(event, tag))
-                                        
+
         # Drawing
         if self.rumor is None:
             color = "black"
@@ -46,7 +44,7 @@ class Person:
         x_coord = self.node_geometry[0]
         y_coord = self.node_geometry[1]
         self.node_radius = node_radius
-        
+
         master.create_oval(x_coord - node_radius,
                            y_coord + node_radius,
                            x_coord + node_radius,
@@ -55,7 +53,7 @@ class Person:
                            fill=color,
                            stipple=stipple,
                            tags=tag)
-        
+
 
     def delete_node(self, gui):
         """Removes the Person instance from people"""
@@ -76,4 +74,3 @@ class Person:
         value = colorchooser.askcolor(title="Choose a rumor")
         self.rumor = int(value[1].replace("#", "0x"), 0)
         self.draw_person(master, gui, self.node_geometry, self.node_radius)
-
