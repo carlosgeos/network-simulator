@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class Common:
     """Abstract class containing common methods that most if not all
     widgets will use

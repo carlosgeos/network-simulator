@@ -3,8 +3,10 @@
 from tkinter import colorchooser
 from PlatformUtils import PlatformUtils
 
+
 class Person:
     """Class representing a person in the network"""
+
     def __init__(self, name, index=None, friends=[], rumor=None):
         self.name = name
         self.friends = friends
@@ -20,17 +22,17 @@ class Person:
         # Tags do not like names with spaces
         tag = self.name.replace(" ", "")
         right_button = PlatformUtils.getRightButton()
-        master.tag_bind(tag, "<Enter>", lambda event: \
+        master.tag_bind(tag, "<Enter>", lambda event:
                         master.give_info(self.name, self.rumor))
-        master.tag_bind(tag, "<Leave>", lambda event: \
+        master.tag_bind(tag, "<Leave>", lambda event:
                         master.remove_info())
-        master.tag_bind(tag, "<" + str(right_button) + ">", lambda event: \
+        master.tag_bind(tag, "<" + str(right_button) + ">", lambda event:
                         self.get_rumor(master, gui))
-        master.tag_bind(tag, "<Double-1>", lambda event:\
+        master.tag_bind(tag, "<Double-1>", lambda event:
                         self.delete_node(gui))
-        master.tag_bind(tag, "<B1-Motion>", lambda event:\
+        master.tag_bind(tag, "<B1-Motion>", lambda event:
                         master.dnd_start(self, event))
-        master.tag_bind(tag, "<ButtonRelease-1>", lambda event:\
+        master.tag_bind(tag, "<ButtonRelease-1>", lambda event:
                         master.dnd_end(event, tag))
 
         # Drawing
@@ -54,7 +56,6 @@ class Person:
                            stipple=stipple,
                            tags=tag)
 
-
     def delete_node(self, gui):
         """Removes the Person instance from people"""
         gui.simu_data["people"].remove(self)
@@ -62,8 +63,7 @@ class Person:
             try:
                 gui.simu_data["people"][i].friends.remove(self.name)
             except ValueError:
-                pass # Not everyone is friends with everyone (nor with
-                     # him/herself)
+                pass  # Not everyone is friends with everyone (nor with him/herself)
         gui.update_app()
 
     def get_rumor(self, master, gui):

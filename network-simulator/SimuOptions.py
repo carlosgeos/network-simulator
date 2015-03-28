@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from tkinter import *
+import tkinter as tk
 from Common import Common
 
 
-class SimuOptions(LabelFrame, Common):
+class SimuOptions(tk.LabelFrame, Common):
     """All the variables and modification options for the network
     simulator.
 
@@ -17,27 +17,26 @@ class SimuOptions(LabelFrame, Common):
     def __init__(self, master):
         super().__init__(master, text="Simulator Options")
 
-        Label(self, text="Update Policy").grid(row=0, column=0)
-        Label(self, text="Modification Policy").grid(row=0, column=1)
-        Label(self, text="Selection Policy").grid(row=0, column=2)
+        tk.Label(self, text="Update Policy").grid(row=0, column=0)
+        tk.Label(self, text="Modification Policy").grid(row=0, column=1)
+        tk.Label(self, text="Selection Policy").grid(row=0, column=2)
 
-        update_menu = OptionMenu(self, master.simu_data["update_function"], *self.UPDATE)
+        update_menu = tk.OptionMenu(self, master.simu_data["update_function"], *self.UPDATE)
         update_menu.grid(row=1, column=0)
-        modif_menu = OptionMenu(self, master.simu_data["modif_function"], *self.MODIFICATION)
+        modif_menu = tk.OptionMenu(self, master.simu_data["modif_function"], *self.MODIFICATION)
         modif_menu.grid(row=1, column=1)
-        select_menu = OptionMenu(self, master.simu_data["select_policy"], self.SELECTION)
+        select_menu = tk.OptionMenu(self, master.simu_data["select_policy"], self.SELECTION)
         select_menu.grid(row=1, column=2)
 
-
-        error_scale = Scale(self,
-                            label="Modification probability",
-                            orient=HORIZONTAL,
-                            from_=0.0,
-                            to=1.0,
-                            tickinterval=0.25,
-                            resolution=0.01,
-                            length=250,
-                            variable=master.simu_data["probability"])
+        error_scale = tk.Scale(self,
+                               label="Modification probability",
+                               orient=tk.HORIZONTAL,
+                               from_=0.0,
+                               to=1.0,
+                               tickinterval=0.25,
+                               resolution=0.01,
+                               length=250,
+                               variable=master.simu_data["probability"])
         error_scale.grid(row=2, column=0, columnspan=3)
 
         # default values

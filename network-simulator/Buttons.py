@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from tkinter import Button
-from tkinter import LabelFrame
+import tkinter as tk
 from Common import Common
 
-class Buttons(LabelFrame, Common):
+
+class Buttons(tk.LabelFrame, Common):
     """This buttons class implements:
 
     - Propagate: run the simulator 1 unit of time
@@ -18,13 +18,13 @@ class Buttons(LabelFrame, Common):
     def __init__(self, master):
         super().__init__(master, text="Choose an action")
 
-        Button(self, text="Add friend",
-               command=master.add_friend).pack()
-        Button(self, text="Run simulation",
-               command=master.run).pack()
-        Button(self, text="Propagate",
-               command=master.propagate).pack()
-        Button(self, text="Reset",
-               command=master.reset_all).pack()
+        tk.Button(self, text="Add friend",
+                  command=master.add_friend).pack()
+        tk.Button(self, text="Run simulation",
+                  command=master.run).pack()
+        tk.Button(self, text="Propagate",
+                  command=master.propagate).pack()
+        tk.Button(self, text="Reset",
+                  command=master.reset_all).pack()
 
         self.resizeable()

@@ -23,7 +23,7 @@ from DispOptions import DispOptions
 from SimuOptions import SimuOptions
 # --- Abstract Classes --- #
 from Common import Common       # common widget methods and attributes
-from Class.Person import Person
+from Person import Person
 # from Link import Link
 # --- Simulator functions --- #
 import rumorFunctions as rF
@@ -69,8 +69,6 @@ class GUI(tk.Tk, Common):
         self.create_widgets()
         self.resizeable()
 
-
-
     # --- Widgets initialization --- #
     def create_widgets(self):
         """This method creates and positions all the widgets in the
@@ -102,8 +100,6 @@ class GUI(tk.Tk, Common):
                          rowspan=2, columnspan=2,
                          sticky=tk.N+tk.W+tk.S+tk.E)
 
-
-
     # --- Files and errors --- #
     def network_check(self):
         """Method checking if names is empty or not"""
@@ -127,11 +123,9 @@ class GUI(tk.Tk, Common):
         self.simu_data["network_file"] = filedialog.askopenfilename(title="Select a network file",
                                                                     filetypes=ftypes)
 
-
         self.simu_data["people"] = rF.load_people(self.simu_data["network_file"])
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
         self.update_app()
-
 
     def save_file(self):
         """Takes a snapshot of the current state of the network and saves it
@@ -150,7 +144,6 @@ class GUI(tk.Tk, Common):
         self.simu_info.stage_number.set(0)
         self.simu_info.still_fool.set(0)
         self.update_app()
-
 
     # --- calls to rumorFunctions and simulator related methods --- #
     def add_friend(self):

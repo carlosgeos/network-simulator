@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from tkinter import ROUND
+import tkinter as tk
+
 
 class Link:
     """This class represents the link (friendship) between 2 people. It is
@@ -28,9 +29,8 @@ class Link:
 
         # Tag is the two indexes
         tag = (self.person1.name + self.person2.name).replace(" ", "")
-        master.tag_bind(tag, "<Double-Button-1>", lambda event:\
+        master.tag_bind(tag, "<Double-Button-1>", lambda event:
                         self.delete_link(gui))
-
 
         self.link_thickness = link_thickness
         self.points = (self.person1.node_geometry[0],
@@ -42,10 +42,9 @@ class Link:
                            width=self.link_thickness,
                            fill="black",
                            activefill="red",
-                           capstyle=ROUND,
+                           capstyle=tk.ROUND,
                            smooth=True,
                            tags=tag)
-
 
     def delete_link(self, gui):
         """A simple access to simu data network in order to set the link at

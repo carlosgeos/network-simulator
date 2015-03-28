@@ -4,9 +4,10 @@ import tkinter as tk
 from math import cos, sin, pi
 from tkinter import ROUND
 from random import randint
-from Class.Person import Person
+from Person import Person
 from Link import Link
 from rumorFunctions import set_as_friends
+
 
 class NetworkFrame(tk.Canvas):
     """Class inheriting from tkinter.Canvas. It contains the graphic
