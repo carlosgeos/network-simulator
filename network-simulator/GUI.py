@@ -9,11 +9,10 @@ simulator.
 """
 
 # --- TkInter libraries --- #
-from tkinter import *
+import tkinter as tk
 from tkinter import filedialog
 from tkinter import simpledialog
 from tkinter import messagebox
-#import random
 # --- GUI main widgets --- #
 from NetworkFrame import NetworkFrame
 from NetworkInfo import NetworkInfo
@@ -24,13 +23,13 @@ from DispOptions import DispOptions
 from SimuOptions import SimuOptions
 # --- Abstract Classes --- #
 from Common import Common       # common widget methods and attributes
-from Person import Person
-#from Link import Link
+from Class.Person import Person
+# from Link import Link
 # --- Simulator functions --- #
 import rumorFunctions as rF
 
 
-class GUI(Tk, Common):
+class GUI(tk.Tk, Common):
     """Instance class defining the Graphical User Interface, more
     specifically, the top level window and root Tk
 
@@ -44,11 +43,10 @@ class GUI(Tk, Common):
                     "rewrite": rF.rewrite,
                     "mixture": rF.mixture}
 
-
     def __init__(self):
         super().__init__()      # takes Tk constructor
 
-        self.option_readfile("optionsDB") # .Xresources file
+        self.option_readfile("optionsDB")  # .Xresources file
         self.title("Network simulator")
 
         # Root binds / shortcuts
@@ -62,10 +60,10 @@ class GUI(Tk, Common):
             "network": [],
             "people": [],
             "dont_tell": False,
-            "modif_function": StringVar(),
-            "probability": DoubleVar(),
-            "update_function": StringVar(),
-            "select_policy": StringVar()
+            "modif_function": tk.StringVar(),
+            "probability": tk.DoubleVar(),
+            "update_function": tk.StringVar(),
+            "select_policy": tk.StringVar()
         }
 
         self.create_widgets()
@@ -84,25 +82,25 @@ class GUI(Tk, Common):
 
         self.network_info = NetworkInfo(self)
         self.network_info.grid(row=0, column=0,
-                               sticky=N+W+S+E)
+                               sticky=tk.N+tk.W+tk.S+tk.E)
         self.simu_info = SimuInfo(self)
         self.simu_info.grid(row=1, column=0,
-                            sticky=N+W+S+E)
+                            sticky=tk.N+tk.W+tk.S+tk.E)
         self.buttons = Buttons(self)
         self.buttons.grid(row=2, column=0,
-                          sticky=N+W+S+E)
+                          sticky=tk.N+tk.W+tk.S+tk.E)
         self.disp_options = DispOptions(self)
         self.disp_options.grid(row=2, column=1,
-                               sticky=N+W+S+E)
+                               sticky=tk.N+tk.W+tk.S+tk.E)
         self.simu_options = SimuOptions(self)
         self.simu_options.grid(row=2, column=2,
-                               sticky=N+W+S+E)
+                               sticky=tk.N+tk.W+tk.S+tk.E)
 
         self.canvas = NetworkFrame(self, self.network_info,
                                    self.disp_options)
         self.canvas.grid(row=0, column=1,
                          rowspan=2, columnspan=2,
-                         sticky=N+W+S+E)
+                         sticky=tk.N+tk.W+tk.S+tk.E)
 
 
 
@@ -111,8 +109,8 @@ class GUI(Tk, Common):
         """Method checking if names is empty or not"""
         try:
             if not self.simu_data["people"]:
-                raise TclError
-        except TclError:
+                raise tk.TclError
+        except tk.TclError:
             messagebox.showwarning("No network", "The network is empty!")
             return False
         else:
@@ -165,7 +163,6 @@ class GUI(Tk, Common):
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
         self.update_app()
 
-
     def run(self):
         """call propagate for a finite number of times"""
         if self.network_check():
@@ -176,7 +173,6 @@ class GUI(Tk, Common):
                 self.propagate()
                 self.after(delay)
                 self.update()
-
 
     def calc_still_fools(self):
         """Calculates the number of people that still do not know any rumor"""
@@ -214,6 +210,7 @@ class GUI(Tk, Common):
             spread = rF.update(self.simu_data["network"], self.simu_data["people"], flags)
             self.simu_info.stage_number.set(self.simu_info.stage_number.get() + 1)
             self.update_app()
+
 
 # --- Main --- #
 def main():

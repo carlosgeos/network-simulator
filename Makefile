@@ -6,8 +6,8 @@ $(TEXFILE).pdf: $(TEXFILE).tex
 view: $(TEXFILE).pdf
 	evince tex_files/$(TEXFILE).pdf &
 
+test:
+	python3 network-simulator/tkinter/GUI.py
+
 clean:
-	rm -fv *.aux *.log *.toc *.blg *.bbl *.synctex.gz
-	rm -fv *.out *.bcf *blx.bib *.run.xml
-	rm -fv *.fdb_latexmk *.fls
-	rm -fv $(TEXFILE).pdf
+	rm -rfv tex_files

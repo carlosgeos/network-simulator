@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-from tkinter import Canvas
+
+import tkinter as tk
 from math import cos, sin, pi
 from tkinter import ROUND
 from random import randint
-from Person import Person
+from Class.Person import Person
 from Link import Link
 from rumorFunctions import set_as_friends
 
-class NetworkFrame(Canvas):
+class NetworkFrame(tk.Canvas):
     """Class inheriting from tkinter.Canvas. It contains the graphic
     representation of the network. Its children (tkinter) are the
     Person(s) and Links
@@ -19,7 +20,6 @@ class NetworkFrame(Canvas):
 
         self.layout_funcs = {"circular": self.circular,
                              "random": self.random_dist}
-
 
         # Access to some attributes from these 'friend' classes
         self.info_friend = network_info
@@ -49,7 +49,6 @@ class NetworkFrame(Canvas):
                 if network[i][j]:
                     network[i][j].draw_link(self, self.master, link_thickness)
 
-
     def circular(self, index, border_adjust, people):
         """Represents the network in an oval fashion"""
         major_radius = self.winfo_width() / 2 - border_adjust
@@ -61,7 +60,6 @@ class NetworkFrame(Canvas):
                          major_radius * 2 + border_adjust, # x1
                          minor_radius * 2 + border_adjust, # y1
                          dash=(10,))
-
 
         angles = 2*pi/len(people)
         angle = angles * (index + 1)
@@ -83,7 +81,6 @@ class NetworkFrame(Canvas):
         y_coord = randint(top, bottom)
 
         return x_coord, y_coord
-
 
     # Update names and rumor in NetworkInfo (friend)
     def give_info(self, name, rumor):
@@ -113,7 +110,6 @@ class NetworkFrame(Canvas):
                          tags="dndline")
 
         self.start_node = start_node
-
 
     def dnd_end(self, event, tag):
         """drag and drop feature
