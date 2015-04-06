@@ -15,9 +15,14 @@ class TopMenu(tk.Menu):
     def __create_menu(self, master):
         filemenu = tk.Menu(self)
         self.add_cascade(label="File", menu=filemenu)
-        filemenu.add_command(label="Load network file", command=master.load_file)
-        filemenu.add_command(label="Save", command=master.save_file)
-        filemenu.add_command(label="Exit", command=master.destroy)
+        filemenu.add_command(label="Load network file",
+                             command=master.load_file)
+        filemenu.add_command(label="Load pickled network file",
+                             command=master.load_pickled_file)
+        filemenu.add_command(label="Save",
+                             command=master.save_file)
+        filemenu.add_command(label="Exit",
+                             command=master.destroy)
         helpmenu = tk.Menu(self)
         self.add_cascade(label="Help", menu=helpmenu)
         helpmenu.add_command(label="About", command=about_app)

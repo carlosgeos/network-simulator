@@ -7,7 +7,8 @@
 simulator.
 
 """
-
+# --- Libraries --- #
+import json
 # --- TkInter libraries --- #
 import tkinter as tk
 from tkinter import filedialog
@@ -112,6 +113,12 @@ class GUI(tk.Tk, Common):
         else:
             return True
 
+    def file_present(self):
+        if self.simu_data["network_file"] is None:
+            return False
+        else:
+            return True
+
     def load_file(self):
         """Gets the path of network file, and extracts the names, friends and
         friendship network of it. Then updates the class attributes.
@@ -122,9 +129,25 @@ class GUI(tk.Tk, Common):
                   ("All files", ".*")]
         self.simu_data["network_file"] = filedialog.askopenfilename(title="Select a network file",
                                                                     filetypes=ftypes)
+        if not self.simu_data["network_file"]:
+            return
 
         self.simu_data["people"] = rF.load_people(self.simu_data["network_file"])
-        self.simu_data["network"] = rF.load_network(self.simu_data["people"])
+        self.update_app()
+
+    def load_pickled_file(self):
+        """Decodes a pickled file containing the people and the friendship
+        matrix, then updates the attributes and the GUI
+
+        """
+        ftypes = [("Pickled network files", ".p"),
+                  ("All files", ".*")]
+        self.simu_data["network_file"] = filedialog.askopenfilename(title="Select a network file",
+                                                                    filetypes=ftypes)
+        if not self.simu_data["network_file"]:
+            return
+
+        self.simu_data["people"] = rF.load_pickled_file(self.simu_data["network_file"])
         self.update_app()
 
     def save_file(self):
@@ -132,15 +155,20 @@ class GUI(tk.Tk, Common):
         to a file. The file format is readable by this program using
         the load_file method.
 
-        """
-        pass
+        It uses the pickle library
 
+        """
+        self.simu_data["network_file"] = filedialog.asksaveasfilename(title="Select a file to save the data to:",
+                                                                      defaultextension=".p")
+        if not self.simu_data["network_file"]:
+            return
+        rF.save_file(self.simu_data)
 
     def reset_all(self):
         """Resets the network to the initial state
         """
         self.simu_data["people"] = []
-        self.simu_data["network"] = []
+#        self.simu_data["network"] = []
         self.simu_info.stage_number.set(0)
         self.simu_info.still_fool.set(0)
         self.update_app()
@@ -150,10 +178,16 @@ class GUI(tk.Tk, Common):
         """adds a person to the network"""
         name = simpledialog.askstring("Add a new person",
                                       "Name of person:")
-        # TODO: if name.isdigit() --> conflict with canvas object ID's, añadir eso
-        index = len(self.simu_data["people"])
-        self.simu_data["people"].append(Person(name, index))
-        self.simu_data["network"] = rF.load_network(self.simu_data["people"])
+        if name is None or not name:
+            # Cancel button or empty name
+            return
+        elif len(list(filter(lambda person: name == person.name, self.simu_data["people"]))) > 0:
+            # Name already given
+            tk.messagebox.showerror("Existing name",
+                                    "This name is already given")
+            return
+
+        self.simu_data["people"].append(Person(name))
         self.update_app()
 
     def run(self):
@@ -185,7 +219,9 @@ class GUI(tk.Tk, Common):
         self.network_info.network_size.set(len(self.simu_data["people"]))
         self.calc_still_fools()
 
+        # Compute the network
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
+        # rF.print_matrix(self.simu_data["network"])
 
         # Update canvas
         self.canvas.update(self.simu_data["network"],
@@ -202,6 +238,7 @@ class GUI(tk.Tk, Common):
 
             spread = rF.update(self.simu_data["network"], self.simu_data["people"], flags)
             self.simu_info.stage_number.set(self.simu_info.stage_number.get() + 1)
+            self.simu_info.rumor_spread.set(spread)
             self.update_app()
 
 

@@ -8,16 +8,13 @@ class Link:
     to people
 
     """
-    def __init__(self, person1, person2, row_position, col_position):
+    def __init__(self, person1, person2):
         """Constructor the class, takes 2 parameters of class Person and the
         thickness to represent the link.
 
         """
         self.person1 = person1
         self.person2 = person2
-        # Indexes are kept for fast delete in network matrix
-        self.row_position = row_position
-        self.col_position = col_position
 
     def draw_link(self, master, gui, link_thickness):
         """This method will make the class graphical (it will appear on its
@@ -26,9 +23,9 @@ class Link:
         """
 
         # Events and binds
-
         # Tag is the two indexes
         tag = (self.person1.name + self.person2.name).replace(" ", "")
+        print("I have just being created, my Link tag is", tag)
         master.tag_bind(tag, "<Double-Button-1>", lambda event:
                         self.delete_link(gui))
 
@@ -47,13 +44,11 @@ class Link:
                            tags=tag)
 
     def delete_link(self, gui):
-        """A simple access to simu data network in order to set the link at
-        that location to False, then update the network
+        """Eliminates each others name from the concerned people friend's
+        list, then update the simulator to reflect the changes.
 
         """
-#        print("My row pos is:", self.row_position)
-#        print("My col pos is:", self.col_position)
-#        gui.simu_data["network"][self.row_position][self.col_position] = False
-        gui.simu_data["people"][self.col_position].friends.remove(gui.simu_data["people"][self.row_position].name)
-        gui.simu_data["people"][self.row_position].friends.remove(gui.simu_data["people"][self.col_position].name)
+
+        self.person1.friends.remove(self.person2.name)
+        self.person2.friends.remove(self.person1.name)
         gui.update_app()

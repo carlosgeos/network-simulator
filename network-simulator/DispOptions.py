@@ -4,11 +4,16 @@ from Common import Common
 
 
 class DispOptions(tk.LabelFrame, Common):
-    LAYOUT = ("circular", "random")
     """All the variables and modification options for the network
-    simulator.
+    simulator (how should it look/display and how should it behave).
 
     """
+    # defaults
+    LAYOUT = ("circular", "shell")
+    NODE_SIZE = 20
+    LINK_THICKNESS = 2
+    DELAY = 0.5
+
     def __init__(self, master):
         super().__init__(master, text="Display Options")
 
@@ -16,13 +21,13 @@ class DispOptions(tk.LabelFrame, Common):
         self.layout.set(self.LAYOUT[0])
 
         self.node_size = tk.IntVar()
-        self.node_size.set(20)
+        self.node_size.set(self.NODE_SIZE)
 
         self.link_thickness = tk.IntVar()
-        self.link_thickness.set(2)
+        self.link_thickness.set(self.LINK_THICKNESS)
 
         self.delay = tk.DoubleVar()
-        self.delay.set(0.5)
+        self.delay.set(self.DELAY)
 
         tk.Label(self, text="Network Layout").grid(row=0, column=0,
                                                    columnspan=3)

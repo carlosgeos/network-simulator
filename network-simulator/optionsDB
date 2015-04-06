@@ -11,9 +11,6 @@
 *foreground:			black
 *font:				cantarell 12
 *highlightBackground:		#DEEAF4
-! *highlightColor:		blue
-*highlightThickness:		5
-
 
 ! Widget dependent config, more priority
 

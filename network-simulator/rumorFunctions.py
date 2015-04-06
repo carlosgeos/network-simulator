@@ -7,7 +7,7 @@ libraries that the main module 'rumor' is using
 
 
 # --- Import libraries --- #
-
+import pickle
 from random import random
 from random import choice
 from random import randint
@@ -30,6 +30,7 @@ MIX_PROB = 0.9                  # Probability of keeping own rumour
 
 # --- Extending types --- #
 
+
 def probability(str_value):
     """checks if probability is a valid float value, raises exception
     otherwise
@@ -40,6 +41,7 @@ def probability(str_value):
         raise TypeError("Invalid probability value")
     return value
 
+
 def rumor_type(str_value):
     value = int(str_value)
     if not 0 <= value <= RUMOR_MAX_VALUE:
@@ -47,6 +49,29 @@ def rumor_type(str_value):
     return value
 
 # --- Load functions --- #
+
+
+def save_file(data_to_save):
+    """Saves the current network state (two attributes) in a pickled
+    format, in the specified file
+
+    """
+    filename = data_to_save["network_file"]
+    archivo = open(filename, "wb")          # Open file in binary
+    pickle.dump(data_to_save["people"], archivo, 2)           # protocol 2
+    archivo.close()
+
+
+def load_pickled_file(filename):
+    """Loads the saved network by decoding the file given and returning
+    the data to the simu_data class attribute of GUI
+
+    """
+    archivo = open(filename, "rb")
+    data_to_load = pickle.load(archivo)
+    archivo.close()
+    return data_to_load
+
 
 def load_network(people):
     """Computes and updates the friendship network. Returns network of
@@ -56,6 +81,8 @@ def load_network(people):
 
     network = [[False for person in people] for person in people]
     for i in range(len(people)):
+        print("Hi, my name is", people[i].name, "and my friends are",
+              people[i].friends)
         for friend in people[i].friends:
             j = 0
             index_of_friend = NO_FRIENDS
@@ -69,11 +96,16 @@ def load_network(people):
 
 
 def load_people(network_file):
+    """Creates all the Person instances and appends them to the people
+    list
+
+    """
     names, friends = load_names_friends(network_file)
     people = []
     for i in range(len(names)):
-        people.append(Person(names[i], i, friends[i]))
+        people.append(Person(names[i], friends[i]))
     return people
+
 
 def load_names_friends(friends_file):
     """Loads the list of names of the people in the network"""
@@ -91,11 +123,8 @@ def load_names_friends(friends_file):
     return names, friends
 
 
-def are_friends(network, idx0, idx1):
-    """Returns True iff a person with index idx0 is a friend of a person
-    with index idx1. A person is not a friend with himself
-    (herself).
-
+def are_friends(network, idx0, idx1): # Esta funcion es una mierda.
+    """
     """
     res = False
     if idx0 > idx1:
@@ -104,6 +133,7 @@ def are_friends(network, idx0, idx1):
         res = network[idx1][idx0]
     return res
 
+
 def set_as_friends(network, people, idx0, idx1):
     """This funciton sets persons with ids id0 and id1 as friends in the
     social network.  It is impossible to set a person as a friend with
@@ -111,21 +141,28 @@ def set_as_friends(network, people, idx0, idx1):
 
     """
     if idx0 > idx1:
-        network[idx0][idx1] = Link(people[idx0], people[idx1], idx0, idx1)
-    elif idx0 < idx1:
-        network[idx1][idx0] = Link(people[idx1], people[idx0], idx1, idx0)
+        network[idx0][idx1] = Link(people[idx0], people[idx1])
+
+###DEBUG
+def print_matrix(matrix):
+    new_matrix = [["T" if elem else "F" for elem in row] for row in matrix]
+    for elem in new_matrix:
+        print(elem)
+
+###
+
 
 def get_random_friend_id(index, network, people, dont_tell):
     """Gets the index of a random, possible, friend"""
     friends = []
     for i in range(len(network)):
         if are_friends(network, index, i):
-            if people[i].rumor == None or not dont_tell:
+            if people[i].rumor is None or not dont_tell:
                 friends.append(i)
     if friends:
         chosen_one = choice(friends)
     else:
-        chosen_one = -1
+        chosen_one = NO_FRIENDS
     return chosen_one
 
 
@@ -150,7 +187,8 @@ def print_state(names, people):
     longest_name = len(max(names, key=len))
     fool = "-- Does not know --"
     # --- Printing --- #
-    print("{:{width}}\t{:>24} {:>6}".format("NAME", "BIN", "HEX", width=longest_name))
+    print("{:{width}}\t{:>24} {:>6}".format("NAME", "BIN", "HEX",
+                                            width=longest_name))
     for i in range(len(names)):
         print("{:{width}}".format(names[i], width=longest_name), end="")
         if people[i].rumor is not None:
@@ -179,6 +217,7 @@ def predict_rumor(rumor, modif_function, probability):
         rumor = modif_function(rumor)
     return rumor
 
+
 def none(rumor):
     """Returns the rumor without modification"""
     return rumor
@@ -193,7 +232,6 @@ def incremental(rumor):
         rumor += 1
     else:
         rumor -= 1
-    # Añadir Rumor() al valor retornado si hay problemas con el tipo int
     return rumor % (RUMOR_MAX_VALUE + 1)
 
 
@@ -203,7 +241,6 @@ def bitflip(rumor):
     matching with 1 flipped
 
     """
-    # Añadir Rumor() al valor retornado si hay problemas con el tipo int
     return rumor ^ (2**randint(0, RUMOR_LENGTH_BIN - 1))
 
 
@@ -216,6 +253,7 @@ def stable(new_people, chosen_one, rumor):
     """
     if not new_people[chosen_one].rumor:
         new_people[chosen_one].rumor = rumor
+
 
 def rewrite(new_people, chosen_one, rumor):
     """Rewrite update rule, person receiving the rumor will forget his/her

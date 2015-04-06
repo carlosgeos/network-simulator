@@ -18,8 +18,8 @@ class NetworkInfo(tk.LabelFrame, Common):
 
         # Widgets inside the frame
         tk.Label(self, text="Network size:").grid(row=0, column=0, sticky=tk.NW)
-        tk.Label(self, text="Node name:").grid(row=1, column=0, sticky=tk.W)
-        tk.Label(self, text="Node rumor:").grid(row=2, column=0, sticky=tk.SW)
+        tk.Label(self, text="Person name:").grid(row=1, column=0, sticky=tk.W)
+        tk.Label(self, text="Rumor:").grid(row=2, column=0, sticky=tk.SW)
 
         tk.Label(self, textvariable=self.network_size,
                  anchor=tk.E).grid(row=0, column=1, sticky=tk.NE)
