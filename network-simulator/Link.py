@@ -25,7 +25,6 @@ class Link:
         # Events and binds
         # Tag is the two indexes
         tag = (self.person1.name + self.person2.name).replace(" ", "")
-        print("I have just being created, my Link tag is", tag)
         master.tag_bind(tag, "<Double-Button-1>", lambda event:
                         self.delete_link(gui))
 

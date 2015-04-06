@@ -7,8 +7,6 @@
 simulator.
 
 """
-# --- Libraries --- #
-import json
 # --- TkInter libraries --- #
 import tkinter as tk
 from tkinter import filedialog
@@ -25,7 +23,6 @@ from SimuOptions import SimuOptions
 # --- Abstract Classes --- #
 from Common import Common       # common widget methods and attributes
 from Person import Person
-# from Link import Link
 # --- Simulator functions --- #
 import rumorFunctions as rF
 
@@ -54,17 +51,17 @@ class GUI(tk.Tk, Common):
         self.bind("<Control-w>", lambda event: self.destroy())
         self.bind("<Control-q>", lambda event: self.destroy())
         self.bind("<Control-o>", lambda event: self.load_file())
+        self.bind("<Control-p>", lambda event: self.load_pickled_file())
 
         # Data to manipulate
         self.simu_data = {
             "network_file": None,
             "network": [],
             "people": [],
-            "dont_tell": False,
             "modif_function": tk.StringVar(),
             "probability": tk.DoubleVar(),
             "update_function": tk.StringVar(),
-            "select_policy": tk.StringVar()
+            "select_function": tk.StringVar()
         }
 
         self.create_widgets()
@@ -183,18 +180,37 @@ class GUI(tk.Tk, Common):
             return
         elif len(list(filter(lambda person: name == person.name, self.simu_data["people"]))) > 0:
             # Name already given
-            tk.messagebox.showerror("Existing name",
-                                    "This name is already given")
-            return
+            messagebox.showerror("Existing name",
+                                 "This name is already given")
+            self.add_friend()
+        elif name.isdigit():
+            messagebox.showerror("Number",
+                                 "Names cannot be numbers")
+            self.add_friend()
+        else:
+            self.simu_data["people"].append(Person(name))
+            self.update_app()
 
-        self.simu_data["people"].append(Person(name))
-        self.update_app()
+    def add_network(self):
+        """Complementary function that adds a certain amount of people to the
+        network. The relation between them can easily be set
+        afterwards using the drag and drop feature
+
+        """
+        nbr = simpledialog.askinteger("Network size",
+                                      "Number of people in the network:")
+
+        for i in range(nbr):
+            self.add_friend()
 
     def run(self):
         """call propagate for a finite number of times"""
         if self.network_check():
             stages_number = simpledialog.askinteger("Run simulation",
                                                     "Number of stages:")
+            if stages_number is None:
+                # Cancel button
+                return
             delay = int(self.disp_options.delay.get() * 1000)
             for i in range(stages_number):
                 self.propagate()
@@ -221,7 +237,6 @@ class GUI(tk.Tk, Common):
 
         # Compute the network
         self.simu_data["network"] = rF.load_network(self.simu_data["people"])
-        # rF.print_matrix(self.simu_data["network"])
 
         # Update canvas
         self.canvas.update(self.simu_data["network"],
@@ -229,14 +244,21 @@ class GUI(tk.Tk, Common):
 
     def propagate(self):
         if self.network_check():
+            # Gathering data
+            select_func = self.simu_data["select_function"].get()
             modif_func = self.modif_funcs[self.simu_data["modif_function"].get()]
             update_func = self.update_funcs[self.simu_data["update_function"].get()]
-            prob = self.simu_data["probability"].get()
-            dont_tell = False
+            probability = self.simu_data["probability"].get()
 
-            flags = (dont_tell, modif_func, prob, update_func)
+            # Packing
+            flags = (select_func, modif_func, probability, update_func)
 
-            spread = rF.update(self.simu_data["network"], self.simu_data["people"], flags)
+            # Calling rumorFunctions
+            spread = rF.update(self.simu_data["network"],
+                               self.simu_data["people"],
+                               flags)
+
+            # Update stats
             self.simu_info.stage_number.set(self.simu_info.stage_number.get() + 1)
             self.simu_info.rumor_spread.set(spread)
             self.update_app()

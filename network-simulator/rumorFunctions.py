@@ -81,8 +81,6 @@ def load_network(people):
 
     network = [[False for person in people] for person in people]
     for i in range(len(people)):
-        print("Hi, my name is", people[i].name, "and my friends are",
-              people[i].friends)
         for friend in people[i].friends:
             j = 0
             index_of_friend = NO_FRIENDS
@@ -123,8 +121,10 @@ def load_names_friends(friends_file):
     return names, friends
 
 
-def are_friends(network, idx0, idx1): # Esta funcion es una mierda.
-    """
+def are_friends(network, idx0, idx1):
+    """Determines if 2 people are friends or not using the friendship
+    matrix
+
     """
     res = False
     if idx0 > idx1:
@@ -143,22 +143,32 @@ def set_as_friends(network, people, idx0, idx1):
     if idx0 > idx1:
         network[idx0][idx1] = Link(people[idx0], people[idx1])
 
-###DEBUG
+
 def print_matrix(matrix):
+    """Debugging feature, will copy the friendship matrix with a T if
+    there is a link at that place, otherwise it will get a F
+
+    """
     new_matrix = [["T" if elem else "F" for elem in row] for row in matrix]
     for elem in new_matrix:
         print(elem)
 
-###
 
+def get_friends(index, network, people):
+    """Gets all the possible friends of a person
 
-def get_random_friend_id(index, network, people, dont_tell):
-    """Gets the index of a random, possible, friend"""
+    """
     friends = []
     for i in range(len(network)):
         if are_friends(network, index, i):
-            if people[i].rumor is None or not dont_tell:
-                friends.append(i)
+            friends.append(i)
+    return friends
+
+
+def get_random_friend(friends):
+    """Gets the index of a random, possible, friend
+
+    """
     if friends:
         chosen_one = choice(friends)
     else:
@@ -166,7 +176,7 @@ def get_random_friend_id(index, network, people, dont_tell):
     return chosen_one
 
 
-# --- Printing functions --- #
+# --- Command line printing functions --- #
 
 
 def print_network(names, friends):
@@ -246,25 +256,38 @@ def bitflip(rumor):
 
 # --- Different reactions may occur / update functions --- #
 
-def stable(new_people, chosen_one, rumor):
+def stable(new_people, chosen_one, rumor, send_to_all):
     """Stable update rule, person receiving the rumor does not change
     his/her version
 
     """
-    if not new_people[chosen_one].rumor:
-        new_people[chosen_one].rumor = rumor
+
+    if send_to_all:
+        if isinstance(new_people[chosen_one].rumor, list):
+            new_people[chosen_one].rumor.append(rumor)
+        else:
+            if not new_people[chosen_one].rumor:
+                new_people[chosen_one].rumor = [rumor]
+    else:
+        if not new_people[chosen_one].rumor:
+            new_people[chosen_one].rumor = rumor
 
 
-def rewrite(new_people, chosen_one, rumor):
+def rewrite(new_people, chosen_one, rumor, send_to_all):
     """Rewrite update rule, person receiving the rumor will forget his/her
     own version and will change it for the new one that is being told
 
     """
+    if send_to_all:
+        if isinstance(new_people[chosen_one].rumor, list):
+            new_people[chosen_one].rumor.append(rumor)
+        else:
+            new_people[chosen_one].rumor = [rumor]
+    else:
+        new_people[chosen_one].rumor = rumor
 
-    new_people[chosen_one].rumor = rumor
 
-
-def mixture(new_people, chosen_one, rumor):
+def mixture(new_people, chosen_one, rumor, send_to_all):
     """The new rumor is a mixture of the person own rumor and the one
     being told
 
@@ -282,7 +305,13 @@ def mixture(new_people, chosen_one, rumor):
                     rumor[i] = own_rumor[i]
         rumor = int("".join(rumor), 2)
 
-    new_people[chosen_one].rumor = rumor
+    if send_to_all:
+        if isinstance(new_people[chosen_one].rumor, list):
+            new_people[chosen_one].rumor.append(rumor)
+        else:
+            new_people[chosen_one].rumor = [rumor]
+    else:
+        new_people[chosen_one].rumor = rumor
 
 
 # --- Transmission stage, choosing friends and telling the rumor --- #
@@ -295,29 +324,66 @@ def update(network, people, flags):
 
     Two or more people may choose the same friend.
 
-    Flags:
-    [0] --> Dont tell again / dont_tell
-    [1] --> Modification rule / modif_function
-    [2] --> Probability / probability
-    [3] --> Update rule / update_function
-
     Returns rumor_spread; the number of people that learnt the rumor
     during that unit of time.
 
     """
 
-    dont_tell, modif_function, probability, update_function = flags
+    select_function, modif_function, probability, update_function = flags
     rumor_spread = 0
+    if select_function == "all":
+        send_to_all = True
+    else:
+        send_to_all = False
     # deepcopy needed to copy class attributes
     new_people = deepcopy(people)
     for i in range(len(people)):
         if people[i].rumor is not None:
-            chosen_one = get_random_friend_id(i, network, new_people, dont_tell)
-            if chosen_one != NO_FRIENDS:
-                new_rumor = predict_rumor(new_people[i].rumor, modif_function, probability)
-                if new_people[chosen_one].rumor is None:
+            chosen_ones = get_friends(i, network, new_people)
+            if send_to_all:
+                for person in chosen_ones:
+                    if transmit_rumor(person, flags, new_people, i,
+                                      send_to_all):
+                        rumor_spread += 1
+            else:
+                chosen_one = get_random_friend(chosen_ones)
+                if transmit_rumor(chosen_one, flags, new_people, i,
+                                  send_to_all):
                     rumor_spread += 1
-                update_function(new_people, chosen_one, new_rumor)
+
+    if send_to_all:
+        choose_rumors(new_people)
 
     people[:] = new_people
     return rumor_spread
+
+
+def choose_rumors(people):
+    confused_people = list(filter(lambda person: isinstance(person.rumor, list), people))
+    for person in confused_people:
+        occurences = {}
+        for elem in person.rumor:
+            if elem not in occurences:
+                occurences[elem] = person.rumor.count(elem)
+        candidate = max(occurences.values())
+        if occurences.values().count(candidate) > 1:
+            person.rumor = choice(person.rumor)
+        else:
+            candidate = max(occurences)
+
+
+
+def transmit_rumor(chosen_one, flags, new_people, index, send_to_all):
+    """Transmits the rumor to a certain friend
+    """
+    res = False
+    select_func, modif_function, probability, update_function = flags
+    if chosen_one != NO_FRIENDS:
+        new_rumor = predict_rumor(new_people[index].rumor,
+                                  modif_function,
+                                  probability)
+        if new_people[chosen_one].rumor is None:
+            res = True
+        update_function(new_people, chosen_one, new_rumor, send_to_all)
+
+    return res

@@ -23,6 +23,9 @@ class TopMenu(tk.Menu):
                              command=master.save_file)
         filemenu.add_command(label="Exit",
                              command=master.destroy)
+        editmenu = tk.Menu(self)
+        self.add_cascade(label="Edit", menu=editmenu)
+        editmenu.add_command(label="Parameters", command=show_params)
         helpmenu = tk.Menu(self)
         self.add_cascade(label="Help", menu=helpmenu)
         helpmenu.add_command(label="About", command=about_app)
@@ -34,3 +37,6 @@ def about_app():
                            "{}\n{}\n{}".format("YAWN",
                                                "Yet Another Network Simulator",
                                                "Carlos Requena López - 2015"))
+
+def show_params():
+    pass

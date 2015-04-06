@@ -9,7 +9,7 @@ class SimuOptions(tk.LabelFrame, Common):
 
     """
     UPDATE = ("stable", "rewrite", "mixture")
-    SELECTION = "random"
+    SELECTION = ("random", "all")
     MODIFICATION = ("none", "incremental", "bitflip")
 
     DEFAULT_PROBABILITY = 0.5
@@ -21,11 +21,14 @@ class SimuOptions(tk.LabelFrame, Common):
         tk.Label(self, text="Modification Policy").grid(row=0, column=1)
         tk.Label(self, text="Selection Policy").grid(row=0, column=2)
 
-        update_menu = tk.OptionMenu(self, master.simu_data["update_function"], *self.UPDATE)
+        update_menu = tk.OptionMenu(self, master.simu_data["update_function"],
+                                    *self.UPDATE)
         update_menu.grid(row=1, column=0)
-        modif_menu = tk.OptionMenu(self, master.simu_data["modif_function"], *self.MODIFICATION)
+        modif_menu = tk.OptionMenu(self, master.simu_data["modif_function"],
+                                   *self.MODIFICATION)
         modif_menu.grid(row=1, column=1)
-        select_menu = tk.OptionMenu(self, master.simu_data["select_policy"], self.SELECTION)
+        select_menu = tk.OptionMenu(self, master.simu_data["select_function"],
+                                    *self.SELECTION)
         select_menu.grid(row=1, column=2)
 
         error_scale = tk.Scale(self,
@@ -41,7 +44,7 @@ class SimuOptions(tk.LabelFrame, Common):
 
         # default values
         master.simu_data["update_function"].set(self.UPDATE[0])
-        master.simu_data["select_policy"].set(self.SELECTION)
+        master.simu_data["select_function"].set(self.SELECTION[0])
         master.simu_data["modif_function"].set(self.MODIFICATION[0])
         master.simu_data["probability"].set(self.DEFAULT_PROBABILITY)
 

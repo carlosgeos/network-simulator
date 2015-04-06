@@ -85,7 +85,7 @@ class NetworkFrame(tk.Canvas):
             self.create_line(i * step * cos(i) * border_adjust,
                              i * step * sin(i) * border_adjust,
                              i + 1 * step * cos(i + 1) * border_adjust,
-                             i + 1* step * sin(i + 1) * border_adjust)
+                             i + 1 * step * sin(i + 1) * border_adjust)
 
         step = 2.0 * pi / len(people)
         x_coord, y_coord = (index * step * cos(index) * border_adjust,
@@ -144,18 +144,21 @@ class NetworkFrame(tk.Canvas):
             # Means drag and drop was not completed or same person,
             # clean and exit
             self.delete("dndline")
+            self.start_node = None
+            self.end_node = None
             return
         elif self.end_node.name in self.start_node.friends:
             # Already friends
             self.delete("dndline")
             messagebox.showwarning("Already friends!",
                                    "The two people chosen are already friends")
+            self.start_node = None
+            self.end_node = None
             return
 
         # Also add to each other's friends list
         self.start_node.friends.append(self.end_node.name)
         self.end_node.friends.append(self.start_node.name)
-
 
         self.start_node = None
         self.end_node = None

@@ -20,9 +20,6 @@ class Person:
         # Using names as tags
         # Tags do not like names with spaces
         tag = self.name.replace(" ", "")
-        print("Hi im being graphically created now")
-        print("My tag is:", tag)
-        print("And my friends are:", self.friends)
         right_button = str(PlatformUtils.getRightButton())
         master.tag_bind(tag, "<Enter>", lambda event:
                         master.give_info(self.name, self.rumor))
