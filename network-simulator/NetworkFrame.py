@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import messagebox
 from math import cos, sin, pi
 from tkinter import ROUND
-from random import randint
 
 
 class NetworkFrame(tk.Canvas):
@@ -74,19 +73,10 @@ class NetworkFrame(tk.Canvas):
         """Place the people as a seashell in the canvas
 
         """
-        SPIRAL_RESOLUTION = 50
-
         width = self.winfo_width() - (border_adjust << 1)
         height = self.winfo_height() - (border_adjust << 1)
 
         # Spiral container (decoration)
-        step = 2.0 * pi / (SPIRAL_RESOLUTION)
-        for i in range(SPIRAL_RESOLUTION):
-            self.create_line(i * step * cos(i) * border_adjust,
-                             i * step * sin(i) * border_adjust,
-                             i + 1 * step * cos(i + 1) * border_adjust,
-                             i + 1 * step * sin(i + 1) * border_adjust)
-
         step = 2.0 * pi / len(people)
         x_coord, y_coord = (index * step * cos(index) * border_adjust,
                             index * step * sin(index) * border_adjust)

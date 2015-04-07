@@ -366,11 +366,11 @@ def choose_rumors(people):
             if elem not in occurences:
                 occurences[elem] = person.rumor.count(elem)
         candidate = max(occurences.values())
-        if occurences.values().count(candidate) > 1:
+        max_candidates = [rumor for rumor, occurence in occurences.items() if occurence == candidate]
+        if len(max_candidates) > 1:
             person.rumor = choice(person.rumor)
         else:
-            candidate = max(occurences)
-
+            person.rumor = max_candidates[0]
 
 
 def transmit_rumor(chosen_one, flags, new_people, index, send_to_all):

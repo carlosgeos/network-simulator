@@ -20,6 +20,7 @@ from Buttons import Buttons
 from TopMenu import TopMenu
 from DispOptions import DispOptions
 from SimuOptions import SimuOptions
+from Parameters import Parameters
 # --- Abstract Classes --- #
 from Common import Common       # common widget methods and attributes
 from Person import Person
@@ -99,6 +100,9 @@ class GUI(tk.Tk, Common):
                          sticky=tk.N+tk.W+tk.S+tk.E)
 
     # --- Files and errors --- #
+    def show_params(self):
+        eso = Parameters(self)
+
     def network_check(self):
         """Method checking if names is empty or not"""
         try:

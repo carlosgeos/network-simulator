@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
-
+import Parameters as param
 
 class TopMenu(tk.Menu):
     """This class contains the Tk Window Menu, which can be seen at the
@@ -25,7 +25,7 @@ class TopMenu(tk.Menu):
                              command=master.destroy)
         editmenu = tk.Menu(self)
         self.add_cascade(label="Edit", menu=editmenu)
-        editmenu.add_command(label="Parameters", command=show_params)
+        editmenu.add_command(label="Parameters", command=master.show_params)
         helpmenu = tk.Menu(self)
         self.add_cascade(label="Help", menu=helpmenu)
         helpmenu.add_command(label="About", command=about_app)
@@ -37,6 +37,3 @@ def about_app():
                            "{}\n{}\n{}".format("YAWN",
                                                "Yet Another Network Simulator",
                                                "Carlos Requena López - 2015"))
-
-def show_params():
-    pass
