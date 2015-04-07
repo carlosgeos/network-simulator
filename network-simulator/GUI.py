@@ -101,7 +101,7 @@ class GUI(tk.Tk, Common):
 
     # --- Files and errors --- #
     def show_params(self):
-        eso = Parameters(self)
+        Parameters(self)
 
     def network_check(self):
         """Method checking if names is empty or not"""
