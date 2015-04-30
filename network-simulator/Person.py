@@ -11,6 +11,8 @@ class Person:
         self.name = name
         if friends is None:
             self.friends = []
+        else:
+            self.friends = friends
         self.rumor = rumor
 
     def draw_person(self, master, gui, node_geometry, node_radius):
